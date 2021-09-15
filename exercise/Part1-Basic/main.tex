@@ -1,0 +1,105 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\input{../config}
+
+\title{第一部分：基本理论}
+\author{Apple Zhang}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\begin{problem}
+  证明 $f(\x)=(x_1x_2\cdots x_n)^{1/n}, \x\in\Rb^{n}_{++}$ 是凹函数.
+\end{problem}
+\begin{proof}
+  显然定义域是一个凸锥，且为凸集.
+  因此其梯度
+  \begin{equation}
+    \partf{f}{x_i}=\frac{f(\x)}{nx_i}
+  \end{equation}
+  以及海森矩阵
+  \begin{equation}
+    \frac{\partial^2 f}{\partial x_i\partial x_j}=\frac{f(\x)}{n^2x_ix_j},\quad
+    \frac{\partial^2 f}{\partial x_i^2}=-(n-1)\frac{f(\x)}{n^2x_i^2},\quad i\not=j.
+  \end{equation}
+  或写成
+  \begin{equation}
+    \nabla^2 f(\x)=\frac{f(\x)}{n^2}\left[\z\z^T-n\diag\left(\frac1{x_1^2}, \frac1{x_2^2}, \cdots, \frac{1}{x^2_n}\right)\right].
+  \end{equation}
+  其中，$\z=[1/x_1,1/x_2,\cdots,1/x_n]^T$.
+  则对于任意的非零向量 $\w\in\Rb^n$，有
+  \begin{align*}
+    \w^T\nabla^2f(\x)\w
+    &=\frac{f(\x)}{n^2}\left[\w^T\z\z^T\w-n\w^T\diag\left(\frac1{x_1^2}, \frac1{x_2^2}, \cdots, \frac{1}{x^2_n}\right)\w\right]\\
+    &=\frac{f(\x)}{n^2}\left[\left(\sum_{i=1}^nw_iz_i\right)^2-n\sum_{i=1}^nw_i^2z_i^2\right]\\
+    &\leq 0.
+  \end{align*}
+  其中最后一步用到了柯西不等式，即任意向量 $\af, \bb$，都有
+  \begin{equation}
+    (\af^T\bb)^2\leq(\af^T\af)(\bb^T\bb).
+  \end{equation}
+  此处取向量 $a_i=1$ 和 $b_i=u_iz_i$ 即可.
+\end{proof}
+\begin{problem}
+  设 $f:\Rb^n\mapsto\Rb$，$g:\Rb^n\times \Rb_{++}\mapsto\Rb$，其中
+  \begin{equation}
+    g(\x,t)=tf\left(\frac{\x}{t}\right).
+  \end{equation}
+  且 $\dom g=\{(\x,t):t>0,~\x/t\in\dom f\}$. 则称 $g$ 是关于函数 $f$ 的透视.
+  证明如果 $f$ 是凸函数，则 $g$ 也是凸的. 同时，若 $f$ 为凹函数，则 $g$ 也是凹函数.
+\end{problem}
+\begin{proof}
+  如果 $f$ 是凸函数，则显然 $\dom f$ 是凸集，注意到 $\dom g=\{(\x,t):t>0,x/t\}$ 是 $\dom f$ 在透视函数下的原相，所以 $\dom g$ 也是凸集.
+  
+  对于任意 $t_1,t_2>0$, $\x_1,\x_2\in\dom f$，$\theta\in[0,1]$，并且 $\x_1/t_1, \x_2/t_2\in \dom f$，有
+  \begin{align*}
+    &~g(\theta(\x_1,t_1)+(1-\theta)(\x_2,t_2))\\
+   =&~g(\theta\x_1+(1-\theta)\x_2, \theta t_1+(1-\theta)t_2)\\
+   =&~[\theta t_1+(1-\theta)t_2]f\left(\frac{\theta\x_1+(1-\theta)\x_2}{\theta t_1+(1-\theta)t_2}\right)\\
+   =&~[\theta t_1+(1-\theta)t_2]f\left(\frac{\theta t_1\x_1/t_1+(1-\theta)t_2\x_2/t_2}{\theta t_1+(1-\theta)t_2}\right)\\
+\leq&~[\theta t_1+(1-\theta)t_2]\left[\frac{\theta t_1}{\theta t_1+(1-\theta)t_2}f\left(\frac{\x_1}{t_1}\right)
+   +\frac{(1-\theta)t_2}{\theta t_1+(1-\theta)t_2}f\left(\frac{\x_2}{t_2}\right)\right]\\
+   =&~\theta t_1f\left(\frac{\x_1}{t_1}\right)+(1-\theta) t_2f\left(\frac{\x_2}{t_2}\right)\\
+   =&~\theta g(\x_1,t_1)+(1-\theta)g(\x_2,t_2).
+  \end{align*}
+  其中第 5 行用到了 $f$ 为凸函数.
+  根据以上及凸函数的定义，可知 $g$ 是凸的. 凹函数的情况完全可以类似证明.
+\end{proof}
+\begin{problem}[Boyd 2.1]
+  Let $C\subseteq\Rb^n$ be a convex set, with $\x_1,\cdots,\x_k\in C$,
+  and let $\theta_1,\cdots,\theta_k\in\Rb$ satisfy $\theta_i\geq 0$,
+  $\theta_1+\cdots+\theta_k=1$. Show that $\theta_1\x_1+\cdots+\theta_k\x_k\in C$.
+  (The definition of convexity is that this holds for $k=2$; you must show it for arbitrary $k$.) \emph{Hint}: Use induction on $k$.
+\end{problem}
+\begin{proof}
+  当 $k=2$ 时，根据凸集的性质，结论显然成立.
+  假设当 $k=l$ 时结论成立，即对于任意 $\x_1,\cdots,\x_l\in C$ 和 $\theta_i\geq 0, \theta_1+\cdots+\theta_l=1$，有
+  \begin{equation}
+    \theta_1\x_1+\theta_2\x_2+\cdots+\theta_l\x_l\in C.
+  \end{equation}
+  则当 $k=l+1$ 时，任意取 $\x_1,\cdots,\x_{l+1}\in C$ 和 $\theta_i\geq 0, \theta_1+\cdots+\theta_{l+1}=1$，
+  由于我们知道
+  \begin{equation}
+    % \frac{\theta_1\x_1}{\theta_1+\theta_2+\cdots+\theta_l}+\cdots+\frac{\theta_l\x_l}{\theta_1+\theta_2+\cdots+\theta_l}=
+    \sum_{j=1}^{l}\frac{\theta_j\x_j}{\sum_{i=1}^l\theta_i}\in C.
+  \end{equation}
+  因此，我们有
+  \begin{align*}
+     &~\theta_1\x_1+\theta_2\x_2+\cdots+\theta_{l+1}\x_{l+1}\\
+    =&~\theta_1\x_1+\theta_2\x_2+\cdots+\left(1-\sum_{i=1}^l \theta_i\right)\x_{l+1}\\
+    =&~\left(\sum_{i=1}^l\theta_i\right)\left(\sum_{j=1}^{l}\frac{\theta_j\x_j}{\sum_{i=1}^l\theta_i}\right)+\left(1-\sum_{i=1}^l \theta_i\right)\x_{l+1}\\
+  \in&~C.
+  \end{align*}
+  根据数学归纳法，结论得证.
+\end{proof}
+
+% TODO (some alternative)
+% 2.1, 2.2, 2.5, 2.7, 2.10, 2.16, 2.18, 2.19
+% 3.1, 3.2, 3.5, 3.13, 3.18, 3.21, 3.32, 3.33, 3.36, 3.43
+\end{document}
